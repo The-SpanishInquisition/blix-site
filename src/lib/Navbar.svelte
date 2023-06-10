@@ -9,7 +9,7 @@
 
 <AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 	<svelte:fragment slot="lead">
-        <img src="src/assets/blix.svg" alt="Blix logo" class="logo"/>
+        <img src="blix.svg" alt="Blix logo" class="logo"/>
     </svelte:fragment>
     Page under construction. Coming soon!
 	<svelte:fragment slot="trail">
