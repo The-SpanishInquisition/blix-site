@@ -1,9 +1,12 @@
 <script>
     import { AppRail, AppRailAnchor, AppRailTile } from "@skeletonlabs/skeleton";
     let currentTile = 0;
+	import { Node, Svelvet, Minimap, Controls } from 'svelvet';
+	import Graph from "./Graph.svelte";
+  import Graphic from "./Graphic.svelte";
 </script>
 
-<AppRail>
+<!-- <AppRail>
 	<svelte:fragment slot="lead">
 		<AppRailAnchor href="/" >Docs</AppRailAnchor>
 	</svelte:fragment>
@@ -20,6 +23,14 @@
 		<svelte:fragment slot="lead">(icon)</svelte:fragment>
 		<span>Tile 3</span>
 	</AppRailTile>
-</AppRail>
+</AppRail> -->
 
+<Graph />  
+<Graphic />
+
+
+
+<style>
+	
+</style>
 				
