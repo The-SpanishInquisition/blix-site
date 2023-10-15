@@ -1,25 +1,48 @@
-<script>
-    import { AppRail, AppRailAnchor, AppRailTile } from "@skeletonlabs/skeleton";
-    let currentTile = 0;
+<script lang="ts">
+  import { Canvas, type Size } from "@threlte/core";
+  import BannerScene from "./BannerScene.svelte";
+  import { Background, Node, Svelvet } from "svelvet";
+
+  const canvasSize: Size = {
+    width: 800,
+    height: 600,
+  };
 </script>
 
-<AppRail>
-	<svelte:fragment slot="lead">
-		<AppRailAnchor href="/" >Docs</AppRailAnchor>
-	</svelte:fragment>
+<div class="banner">
+  <div class="scene">
+    <Canvas size={canvasSize} >
+      <BannerScene />
+    </Canvas>
+  </div>
+  <div class="graph">
+    <Svelvet
+      width={800}
+      height={600}
+      theme="dark"
+      minimap
+      snapTo={10}
+    >
+      <Node />
+      <Node />
+      <Background bgColor="#11111b" />
+    </Svelvet>
+  </div>
+</div>
 
-	<AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
-		<span>Tile 1</span>
-	</AppRailTile>
-	<AppRailTile bind:group={currentTile} name="tile-2" value={1} title="tile-2">
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
-		<span>Tile 2</span>
-	</AppRailTile>
-	<AppRailTile bind:group={currentTile} name="tile-3" value={2} title="tile-3">
-		<svelte:fragment slot="lead">(icon)</svelte:fragment>
-		<span>Tile 3</span>
-	</AppRailTile>
-</AppRail>
+<style>
+  .banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: column; */
+    width: 100%;
+  }
 
-				
+  .graph {
+    margin-top: 0.4em;
+    border: 4px solid #1e1e2e;
+    border-radius: 1em;
+    overflow: hidden;
+  }
+</style>
