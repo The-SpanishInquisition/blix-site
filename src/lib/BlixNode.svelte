@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { Anchor, DefaultAnchor, Node, type CSSColorString } from "blix_svelvet";
+  import { Anchor, DefaultAnchor, Node, type CSSColorString, ColorPicker, Slider } from "blix_svelvet";
   import { createEventDispatcher } from "svelte";
-  import type { BlixAnchorData } from "./types";
+  import { generateInput, generateOutput } from 'blix_svelvet';
+  import type { BlixAnchorData, BlixUIInputData } from "./types";
+  import UiInput from "./UIInput.svelte";
 
   const dispatch = createEventDispatcher();
 
   export let displayName = "Blix Node";
-  export let inputs: BlixAnchorData[];
-  export let outputs: BlixAnchorData[];
+  export let inputsData: BlixAnchorData[] = [];
+  export let outputData: BlixAnchorData = null;
+  export let uisData: BlixUIInputData[] = [];
 
   const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
 
@@ -32,7 +35,66 @@
     return colour as CSSColorString;
   }
 
+
+  // Type your input structure
+  type InputStructure = {
+    value1: number;
+    value2: number;
+    option: CSSColorString;
+  };
+
+  // Create initial values for your parameters
+  const initialData = {
+    value1: 10,
+    value2: 20,
+    option: "red"
+  };
+
+  // inputsData.forEach((inp) => {
+  //   initialData[inp.id] = 0;
+  // });
+  // initialData[outputData.id] = 0;
+  // uisData.forEach((ui) => {
+  //   initialData[ui.id] = 0;
+  // });
+
+  // Generate a formatted inputs store
+  const inputs = generateInput(initialData as InputStructure);
+
+  // Specify processor function
+  const processor = (inps: InputStructure) => {
+    if (inps.option === 'red') {
+      return inps.value1 + inps.value2;
+    }
+    return 100;
+  };
+
+  // Generate output store
+  const output = generateOutput(inputs, processor);
+
 </script>
+
+<!-- <Node width={400} height={200} useDefaults>
+    <div class="node">
+        <div class="radio-group">
+            <ColorPicker
+                parameterStore={$inputs.option}
+            />
+        </div>
+        <div class="sliders">
+            <Slider parameterStore={$inputs.value1} />
+            <Slider parameterStore={$inputs.value2} />
+        </div>
+        <div class="input-anchors">
+            {#each Object.entries($inputs) as [key, value] (key)}
+                <Anchor {key} inputsStore={inputs} input />
+            {/each}
+        </div>
+        <div class="output-anchors">
+            <Anchor outputStore={output} output />
+        </div>
+    </div>
+</Node> -->
 
 <Node
     bgColor="#262630"
@@ -44,23 +106,18 @@
     selectionColor="#f43e5c"
     on:selected="{() => console.log('selected')}"
 >
-    <!-- on:nodeClickReleased="{nodeClicked}" -->
-    <!-- on:nodeDragReleased="{nodeDragReleased}" -->
 <div class="node">
     <div class="header">
     <h1>{displayName}</h1>
     </div>
     <div class="node-body" style="max-width: 400px">
-    <!-- <NodeUiFragment
-        inputStore="{node.inputUIValues}"
-        ui="{$toolboxNode?.ui}"
-        uiConfigs="{$toolboxNode?.uiConfigs}"
-        on:inputInteraction="{handleInputInteraction}"
-    /> -->
+      {#each uisData as ui}
+        <UiInput {ui} bind:value={inputs[ui.id]} />
+      {/each}
     </div>
 
     <div class="anchors inputs">
-        {#each inputs as input}
+        {#each inputsData as input}
         {@const color = stringToColor(input.type)}
         <Anchor
             input
@@ -81,7 +138,6 @@
                 {/if}
                 &lt;<span
                 style:color="{typeCol}"
-                class="{'outlineText'}"
                 >{input.type || "any"}</span
                 >&gt;
             </div>
@@ -98,29 +154,28 @@
         {/each}
     </div>
     <div class="anchors outputs">
-        {#each outputs as output}
-        {@const color = stringToColor(output.type)}
+        {#if outputData}
+        {@const color = stringToColor(outputData.type)}
         <Anchor
             output
-            dataType="{output.type || ''}"
+            dataType="{outputData.type || ''}"
             bgColor="{color}"
-            id="{output.id}"
+            id="{outputData.id}"
             direction="east"
-            on:connection="{() => dispatch('connection', { output })}"
-            on:disconnection="{() => dispatch('disconnection', { output })}"
+            on:connection="{() => dispatch('connection', { outputData })}"
+            on:disconnection="{() => dispatch('disconnection', { outputData })}"
             let:connecting
             let:hovering
         >
             {#if hovering}
             {@const typeCol = "lightblue"}
             <div class="anchorTooltip">
-                {#if output.displayName}
-                {output.displayName}<br />
+                {#if outputData.displayName}
+                {outputData.displayName}<br />
                 {/if}
-                <!-- &lt;{output.type || "any"}&gt; -->
                 &lt;<span
                 style:color="{typeCol}"
-                >{output.type || "any"}</span
+                >{outputData.type || "any"}</span
                 >&gt;
             </div>
             {/if}
@@ -133,7 +188,7 @@
             connected="{false}"
             />
         </Anchor>
-        {/each}
+        {/if}
     </div>
 </div></Node>
 

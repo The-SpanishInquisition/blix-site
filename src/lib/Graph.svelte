@@ -6,9 +6,38 @@
   let graphData: any;
 
   const nodes: BlixNodeData[] = [
-    { displayName: "Animate", inputs: [], outputs: [] },
-    { displayName: "Add Cube", inputs: [], outputs: [] },
-    { displayName: "Set Color", inputs: [], outputs: [] }
+    {
+      displayName: "Animate",
+      inputs: [
+        { id: "cube", displayName: "Cube", type: "cube" }
+      ],
+      output: { id: "scene", displayName: "Scene", type: "scene" },
+      uis: [
+        { id: "speed", displayName: "Speed", component: "slider" }
+      ]
+    },
+    {
+      displayName: "Add Cube",
+      inputs: [],
+      output: { id: "cube", displayName: "Cube", type: "cube" },
+      uis: []
+    },
+    { displayName: "Set Color",
+      inputs: [
+        { id: "cubeIn", displayName: "Cube", type: "cube" }
+      ],
+      output: { id: "cubeOut", displayName: "Cube", type: "cube" },
+      uis: [
+        { id: "color", displayName: "Color", component: "colorPicker" }
+      ]
+    },
+    {
+      displayName: "Output",
+      inputs: [
+        { id: "scene", displayName: "Scene", type: "scene" }
+      ],
+      uis: []
+    }
   ];
 </script>
 <Svelvet
@@ -30,7 +59,7 @@
     <!-- dataTypeChecker="{dataTypeChecker}" -->
 
     {#each nodes as node}
-        <BlixNode displayName={node.displayName} inputs={node.inputs} outputs={node.outputs}/>
+        <BlixNode displayName={node.displayName} inputsData={node.inputs} outputData={node.output} uisData={node.uis} />
     {/each}
     <!-- <Node>
         <Slider
