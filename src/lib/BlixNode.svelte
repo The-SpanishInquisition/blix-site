@@ -4,15 +4,19 @@
   import { generateInput, generateOutput } from 'blix_svelvet';
   import type { BlixAnchorData, BlixUIInputData } from "./types";
   import UiInput from "./UIInput.svelte";
+  import type { Pair, Triple } from "./types";
 
   const dispatch = createEventDispatcher();
 
+  export let id = 0;
   export let displayName = "Blix Node";
   export let inputsData: BlixAnchorData[] = [];
   export let outputData: BlixAnchorData = null;
   export let uisData: BlixUIInputData[] = [];
+  export let box : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
+  export let connected = false;
 
-  const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
+  // const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
 
 //   function checkShowTextOutline(color: string) {
 //     const readable = colord(color).isReadable();
@@ -99,7 +103,7 @@
 <Node
     bgColor="#262630"
     textColor="#ffffff"
-    id={nodeId}
+    id={id}
     borderColor="transparent"
     borderWidth="1px"
     borderRadius="{10}"
@@ -112,7 +116,7 @@
     </div>
     <div class="node-body" style="max-width: 400px">
       {#each uisData as ui}
-        <UiInput {ui} bind:value={inputs[ui.id]} />
+        <UiInput {ui} bind:value={inputs[ui.id]} bind:Userbox={box} bind:connected={connected}/>
       {/each}
     </div>
 
