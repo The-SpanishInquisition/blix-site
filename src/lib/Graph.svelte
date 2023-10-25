@@ -10,6 +10,7 @@
 
   let nodes:{[id : number] :  BlixNodeData} = {
     1 : {
+      type : "Output",
       displayName: "Output",
       inputs: [
         { id: "scene", displayName: "Scene", type: "scene" }
@@ -22,6 +23,7 @@
       connected : true
     },
     2 : {
+      type : "Rotate",
       displayName: "Rotate",
       inputs: [
         { id: "cube", displayName: "Cube", type: "cube" }
@@ -38,6 +40,7 @@
       },
     },
     3 :{
+      type : "Add Cube",
       displayName: "Add Cube",
       inputs: [],
       output: { id: "cube", displayName: "Cube", type: "cube" },
@@ -48,7 +51,8 @@
       },
     },
     4 : { 
-      displayName: "Set Color",
+      type : "Color",
+      displayName: "Color",
       inputs: [
         { id: "cubeIn", displayName: "Cube", type: "cube" }
       ],
@@ -61,6 +65,22 @@
         to : []
       },
     },
+    5 : {
+      type : "Position",
+      displayName: "Position",
+      inputs: [
+        { id: "cubeIn", displayName: "Cube", type: "cube" }
+      ],
+      output: { id: "cubeOut", displayName: "Cube", type: "cube" },
+      uis: [
+        {id: "x-rotate", displayName: "X", component: "slider" },
+        {id : "y-rotate",displayName : "Y", component : "slider"},
+      ],
+      connections : {
+        from : [],
+        to : []
+      },
+    }
 
 
   };
@@ -153,7 +173,14 @@
     <!-- dataTypeChecker="{dataTypeChecker}" -->
 
     {#each Object.values(nodes) as node,i (node.displayName)}
-        <BlixNode  displayName={node.displayName} inputsData={node.inputs} outputData={node.output} uisData={node.uis} bind:box={box} bind:connected={node.connected} />
+        <BlixNode 
+         parent={node.type}
+         displayName={node.displayName}
+         inputsData={node.inputs}
+         outputData={node.output} 
+         uisData={node.uis} 
+         bind:box={box} 
+         bind:connected={node.connected} />
     {/each}
     <!-- <Node>
         <Slider

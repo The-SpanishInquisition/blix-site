@@ -2,7 +2,7 @@
   import { Anchor, DefaultAnchor, Node, type CSSColorString, ColorPicker, Slider } from "blix_svelvet";
   import { createEventDispatcher } from "svelte";
   import { generateInput, generateOutput } from 'blix_svelvet';
-  import type { BlixAnchorData, BlixUIInputData } from "./types";
+  import type { BlixAnchorData, BlixUIInputData, NodeType } from "./types";
   import UiInput from "./UIInput.svelte";
   import type { Pair, Triple } from "./types";
 
@@ -14,6 +14,7 @@
   export let uisData: BlixUIInputData[] = [];
   export let box : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
+  export let parent : NodeType = "Position";
 
   // const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
 
@@ -115,7 +116,7 @@
     </div>
     <div class="node-body" style="max-width: 400px">
       {#each uisData as ui}
-        <UiInput {ui} bind:value={inputs[ui.id]} bind:Userbox={box} bind:connected={connected}/>
+        <UiInput {ui} parent={parent} bind:value={inputs[ui.id]} bind:Userbox={box} bind:connected={connected}/>
       {/each}
     </div>
 

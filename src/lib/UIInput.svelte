@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ColorPicker, Slider } from "blix_svelvet";
-  import type { BlixUIInputData } from "./types";
+  import type { BlixUIInputData, NodeType } from "./types";
   import { writable } from "svelte/store";
   import type { Pair, Triple } from "./types";
   export let ui: BlixUIInputData;
@@ -8,7 +8,7 @@
   export let value = writable<any>(0);
   export let Userbox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
-
+  export let parent : NodeType = "Position";
   const col = "#f43e5c";
   const rot : Triple = [0, 45, 0];
 
@@ -30,12 +30,19 @@ function handle()
     }
     else if(ui.component=="slider"){
         if(connected){
+        if(parent=="Rotate"){
             if(ui.id=="x-rotate") Userbox.rot[0] = $value;
             else
             if(ui.id=="y-rotate") Userbox.rot[1] = $value;
             else
             Userbox.rot[2] = $value;  
         } 
+        else{
+            if(ui.id=="x-rotate") Userbox.pos[0] = $value;
+            else
+            if(ui.id=="y-rotate") Userbox.pos[1] = $value;
+        }
+      }
         else Userbox.rot = rot; 
     }
 }
@@ -48,7 +55,7 @@ function handle()
 <!-- UI Input Component -->
 <div class="component">
     {#if ui.component === "slider"}
-        <Slider parameterStore={value} />
+        <Slider parameterStore={value} min={-3} max={3} step={0.1}/>
     {:else if ui.component === "colorPicker"}
         <ColorPicker parameterStore={value} />
     {/if}
