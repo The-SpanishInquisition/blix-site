@@ -13,6 +13,8 @@
   })
 
   export let UserBox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
+  export let hidden = false;
+
 
    const boxes: { pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean }[] = [
   { pos: [-1, 1], rot: [0, 32, 0], dim: 2.5, col: "#f43e5c", blixBox: true },
@@ -71,6 +73,8 @@
 </T.Mesh>
 {/each}
 
+
+{#if !hidden}
 <T.Mesh position={[UserBox.pos[0], 0.5*UserBox.dim-1, UserBox.pos[1]]} rotation={UserBox.rot} castShadow receiveShadow>
   {#if UserBox?.blixBox}
     <BlixBox dim={UserBox.dim} position={UserBox.pos} rotation={UserBox.rot} />
@@ -79,7 +83,7 @@
     <T.MeshStandardMaterial bind:color={UserBox.col} />
     <!-- <Text text="{i}" color="white" fontSize={0.5} anchorX="50%" anchorY="100%" position.y={4.5} /> -->
 </T.Mesh>
-
+{/if}
 <!-- <TransformControls translationSnap={0} mode="translate" > -->
 <!-- </TransformControls> -->
 

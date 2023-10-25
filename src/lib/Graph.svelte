@@ -6,7 +6,7 @@
 
   let graphData: any;
   export let box :  {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
-
+  export let hidden = true;
 
   let nodes:{[id : number] :  BlixNodeData} = {
     1 : {
@@ -48,7 +48,7 @@
         from : [],
         to : []
       },
-      connected : false
+      connected : false,
     },
     4 : { 
       id : 4,
@@ -69,10 +69,11 @@
 
   };
 
+  const CUBE_INDEX = 3;
 
 
   async function edgeConnected(e: CustomEvent<any>) {
-    console.log("CONNECTION EVENT");
+    // console.log("CONNECTION EVENT");
 
     let parts = e.detail.sourceNode.id.split("-");
     const sourceId = parseInt(parts[1], 10);
@@ -84,12 +85,11 @@
     nodes[targetId].connections.from.push(sourceId);
 
     propagate(nodes[1]);
-
-    console.log(nodes)
+    cubeVisible();
   }
 
   async function edgeDisconnected(e : CustomEvent<any>){
-    console.log("DISCONNECTION EVENT");
+    // console.log("DISCONNECTION EVENT");
     
     let parts = e.detail.sourceNode.id.split("-");
     const sourceId = parseInt(parts[1], 10);
@@ -102,26 +102,35 @@
     }
 
 
+
     nodes[sourceId].connections.to = nodes[sourceId].connections.to.filter(item => item !== targetId)
     nodes[targetId].connections.from = nodes[targetId].connections.from.filter(item => item !== sourceId)
-
-
-
     propagate(nodes[1]);
+    cubeVisible();
   }
+
+  function cubeVisible(){
+    if(nodes[CUBE_INDEX].connected){
+      hidden = false;
+    }
+    else {
+      hidden = true;
+    }
+  }
+
+
 
 
   function propagate(node : BlixNodeData){
     if(node.connected){
       for(let i = 0; i < node.connections.from.length; i++){
         let sourceNode = nodes[node.connections.from[i]];
-        console.log(sourceNode);
+        // console.log(sourceNode);
         sourceNode.connected = true;
         propagate(sourceNode);
       }
     }
   nodes = {...nodes};
-
   }
 
   
@@ -151,7 +160,7 @@
     <!-- bind:clearAllGraphEdges="{clearAllGraphEdges}" -->
     <!-- dataTypeChecker="{dataTypeChecker}" -->
 
-    {#each Object.values(nodes) as node (node.id)}
+    {#each Object.values(nodes) as node,i (node.id)}
         <BlixNode id={node.id}  displayName={node.displayName} inputsData={node.inputs} outputData={node.output} uisData={node.uis} bind:box={box} bind:connected={node.connected} />
     {/each}
     <!-- <Node>

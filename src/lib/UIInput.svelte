@@ -9,21 +9,28 @@
   export let Userbox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
 
-$: $value && handle();
+  const col = "#f43e5c";
+  const rot : Triple = [0, 45, 0];
 
 
+  $: if ($value) {
+        handle();
+    }
+
+$: if(connected==false){
+    if(ui.component=="colorPicker") Userbox.col = col;
+    else if(ui.component=="slider") Userbox.rot = rot;
+}
 
 function handle()
 {
-    console.log(connected);
-    if(!connected) return;
-
     if(ui.component=="colorPicker"){
-        Userbox.col = $value;
+        if(connected) Userbox.col = $value;
+        else Userbox.col = col;
     }
     else if(ui.component=="slider"){
-        Userbox.rot[1] = $value;   
-        console.log($value);
+        if(connected) Userbox.rot[1] = $value;  
+        else Userbox.rot = rot; 
     }
 }
 </script>

@@ -12,7 +12,7 @@ export type BlixNodeData = {
     from : number[];
     to : number[];
   }
-  connected : boolean
+  connected : boolean,
 };
 export type Pair = [number, number];
 export type Triple = [number, number, number];

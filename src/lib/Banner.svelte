@@ -15,16 +15,18 @@
   dim : 1.7,
   col : "#f43e5c"
 };
+
+let hidden = true;
 </script>
 
 <div class="banner">
   <div class="tile scene">
     <Canvas size={canvasSize} >
-      <BannerScene bind:UserBox={UserBox}/>
+      <BannerScene bind:UserBox={UserBox} bind:hidden={hidden}/>
     </Canvas>
   </div>
   <div class="tile graph">
-    <Graph bind:box={UserBox}/>
+    <Graph bind:box={UserBox} bind:hidden={hidden}/>
   </div>
 </div>
 
