@@ -110,12 +110,8 @@
   }
 
   function cubeVisible(){
-    if(nodes[CUBE_INDEX].connected){
-      hidden = false;
-    }
-    else {
-      hidden = true;
-    }
+    if(nodes[CUBE_INDEX].connected) hidden = false
+     else hidden = true;
   }
 
 

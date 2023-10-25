@@ -10,10 +10,11 @@
   };
 
   let UserBox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean} = {
-  pos : [3,1],
-  rot : [0, 45, 0],
-  dim : 1.7,
-  col : "#f43e5c"
+  pos : [-1,1],
+  rot : [0, 32, 0],
+  dim : 2.5,
+  col : "#f43e5c",
+  blixBox : true
 };
 
 let hidden = true;

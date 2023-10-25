@@ -17,7 +17,6 @@
 
 
    const boxes: { pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean }[] = [
-  { pos: [-1, 1], rot: [0, 32, 0], dim: 2.5, col: "#f43e5c", blixBox: true },
   { pos: [-4, -1], rot: [0, 0, 0], dim: 2.2, col: "#89dceb" },
   { pos: [-2, -4], rot: [0, 0, 0], dim: 2, col: "#a6e3a1" },
   { pos: [3, -3], rot: [0, 0, 0], dim: 1, col: "#f9e2af"},
