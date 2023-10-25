@@ -10,7 +10,6 @@
 
   let nodes:{[id : number] :  BlixNodeData} = {
     1 : {
-      id : 1,
       displayName: "Output",
       inputs: [
         { id: "scene", displayName: "Scene", type: "scene" }
@@ -23,23 +22,22 @@
       connected : true
     },
     2 : {
-      id : 2,
-      displayName: "Animate",
+      displayName: "Rotate",
       inputs: [
         { id: "cube", displayName: "Cube", type: "cube" }
       ],
       output: { id: "scene", displayName: "Scene", type: "scene" },
       uis: [
-        { id: "speed", displayName: "Speed", component: "slider" }
+        {id: "x-rotate", displayName: "X", component: "slider" },
+        {id : "y-rotate",displayName : "Y", component : "slider"},
+        {id : "z-rotate",displayName : "Z", component : "slider"},
       ],
       connections : {
         from : [],
         to : []
       },
-      connected : false
     },
     3 :{
-      id : 3,
       displayName: "Add Cube",
       inputs: [],
       output: { id: "cube", displayName: "Cube", type: "cube" },
@@ -48,10 +46,8 @@
         from : [],
         to : []
       },
-      connected : false,
     },
     4 : { 
-      id : 4,
       displayName: "Set Color",
       inputs: [
         { id: "cubeIn", displayName: "Cube", type: "cube" }
@@ -64,8 +60,8 @@
         from : [],
         to : []
       },
-      connected : false
     },
+
 
   };
 
@@ -156,8 +152,8 @@
     <!-- bind:clearAllGraphEdges="{clearAllGraphEdges}" -->
     <!-- dataTypeChecker="{dataTypeChecker}" -->
 
-    {#each Object.values(nodes) as node,i (node.id)}
-        <BlixNode id={node.id}  displayName={node.displayName} inputsData={node.inputs} outputData={node.output} uisData={node.uis} bind:box={box} bind:connected={node.connected} />
+    {#each Object.values(nodes) as node,i (node.displayName)}
+        <BlixNode  displayName={node.displayName} inputsData={node.inputs} outputData={node.output} uisData={node.uis} bind:box={box} bind:connected={node.connected} />
     {/each}
     <!-- <Node>
         <Slider

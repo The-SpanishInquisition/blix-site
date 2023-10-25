@@ -13,9 +13,9 @@
   const rot : Triple = [0, 45, 0];
 
 
-  $: if ($value) {
-        handle();
-    }
+$: if ($value) {
+      handle();
+  }
 
 $: if(connected==false){
     if(ui.component=="colorPicker") Userbox.col = col;
@@ -29,7 +29,13 @@ function handle()
         else Userbox.col = col;
     }
     else if(ui.component=="slider"){
-        if(connected) Userbox.rot[1] = $value;  
+        if(connected){
+            if(ui.id=="x-rotate") Userbox.rot[0] = $value;
+            else
+            if(ui.id=="y-rotate") Userbox.rot[1] = $value;
+            else
+            Userbox.rot[2] = $value;  
+        } 
         else Userbox.rot = rot; 
     }
 }

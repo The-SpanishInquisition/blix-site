@@ -8,7 +8,6 @@
 
   const dispatch = createEventDispatcher();
 
-  export let id = 0;
   export let displayName = "Blix Node";
   export let inputsData: BlixAnchorData[] = [];
   export let outputData: BlixAnchorData = null;
@@ -104,7 +103,6 @@
 <Node
     bgColor="#262630"
     textColor="#ffffff"
-    id={id}
     borderColor="transparent"
     borderWidth="1px"
     borderRadius="{10}"
