@@ -151,7 +151,6 @@
   function propagate(node: BlixNodeData) {
     if (node.id === "N-Output") node.connected = true;
     if (node.connected) {
-      console.log(node.displayName);
       for (let i = 0; i < node.connections.inputs.length; i++) {
         const sourceNode = nodes[node.connections.inputs[i]];
         sourceNode.connected = true;

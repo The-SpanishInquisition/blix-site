@@ -36,9 +36,6 @@
 </AppBar>
 
 <style>
-  .releases {
-    margin-left: 2rem;
-  }
   .logo {
     width: 3em;
   }
