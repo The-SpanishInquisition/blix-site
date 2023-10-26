@@ -121,7 +121,7 @@
 
 
   async function edgeConnected(e: CustomEvent<any>) {
-    // console.log("CONNECTION EVENT");
+    console.log("CONNECTION EVENT");
     const sourceId = e.detail.sourceNode.id;
     const targetId = e.detail.targetNode.id;
 
@@ -130,8 +130,6 @@
 
     propagate(nodes["N-Output"]);
     cubeVisible();
-    console.log(nodes);
-
   }
 
   async function edgeDisconnected(e : CustomEvent<any>){
@@ -141,15 +139,17 @@
     const targetId = e.detail.targetNode.id;
 
 
+
     for(const node of Object.values(nodes)){
       node.connected = false;
     }
 
     nodes[sourceId].connections.to = nodes[sourceId].connections.to.filter(item => item !== targetId)
     nodes[targetId].connections.from = nodes[targetId].connections.from.filter(item => item !== sourceId)
+
     propagate(nodes["N-Output"]);
     cubeVisible();
-    console.log(nodes);
+
   }
 
   function cubeVisible(){
@@ -161,11 +161,10 @@
 
 
   function propagate(node : BlixNodeData){
-
+    if(node.id=="N-Output") node.connected=true;
     if(node.connected){
       for(let i = 0; i < node.connections.from.length; i++){
         let sourceNode = nodes[node.connections.from[i]];
-        // console.log(sourceNode);
         sourceNode.connected = true;
         propagate(sourceNode);
       }

@@ -17,9 +17,14 @@ $: if ($value) {
       handle();
   }
 
+$: if(connected) handle();
+
 $: if(connected===false){
     if(ui.component==="colorPicker") Userbox.col = col;
-    else if(ui.component==="slider") Userbox.rot = rot;
+    else if(ui.component==="slider"){
+        Userbox.rot = rot;
+        Userbox.col = col;
+    } 
 }
 
 function handle()
