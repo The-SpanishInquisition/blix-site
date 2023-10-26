@@ -5,7 +5,7 @@
 
   export const ref = new Group()
 
-  const gltf = useGltf('/src/assets/blix.gltf')
+  const gltf = useGltf('blix.gltf')
 
   const component = forwardEventHandlers()
 </script>
