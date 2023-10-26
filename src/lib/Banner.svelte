@@ -19,17 +19,17 @@
 
 let hidden = true;
 
-import { getProject } from '@theatre/core'
-const config = {} // the config can be empty when starting a new project
-const project = getProject('My Project', config)
+// import { getProject } from '@theatre/core'
+// const config = {} // the config can be empty when starting a new project
+// const project = getProject('My Project', config)
 </script>
 
 <div class="banner">
   <div class="tile scene">
     <Canvas size={canvasSize} >
-      <Theatre studio={{ enabled: true, hide: true }}>
+      <!-- <Theatre studio={{ enabled: true, hide: true }}> -->
       <BannerScene bind:UserBox={UserBox} bind:hidden={hidden}/>
-      </Theatre>
+      <!-- </Theatre> -->
     </Canvas>
   </div>
   <div class="tile graph">

@@ -1,34 +1,49 @@
 <script lang="ts">
-  import { Svelvet } from "blix_svelvet";
   import BlixNode from "./BlixNode.svelte";
   import type { BlixNodeData } from "./types";
   import type { Pair, Triple } from "./types";
+  import { Svelvet, type NodeKey, type AnchorKey } from "blix_svelvet";
+  import {onMount} from 'svelte';
 
   let graphData: any;
   export let box :  {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let hidden = true;
 
-  let nodes:{[id : number] :  BlixNodeData} = {
-    1 : {
-      type : "Output",
+
+  let connectAnchorIds: (
+    sourceNode: NodeKey,
+    sourceAnchor: AnchorKey,
+    targetNode: NodeKey,
+    targetAnchor: AnchorKey
+  ) => any;
+
+  let nodes:{[id : string] :  BlixNodeData} = {
+    "N-Output" : {
+      id : `N-Output`,
+      type : "output",
       displayName: "Output",
       inputs: [
-        { id: "scene", displayName: "Scene", type: "scene" }
+        { id: `A-Output-I`, displayName: "Scene", type: "scene" }
       ],
       uis: [],
       connections : {
         from : [],
         to : []
       },
-      connected : true
+      connected : true,
+      posistion : {
+        x : 800,
+        y : 0
+      }
     },
-    2 : {
-      type : "Rotate",
+    "N-Rotate" : {
+      id : `N-Rotate`,
+      type : "rotate",
       displayName: "Rotate",
       inputs: [
-        { id: "cube", displayName: "Cube", type: "cube" }
+        { id: `A-Rotate-I`, displayName: "Cube", type: "cube" }
       ],
-      output: { id: "scene", displayName: "Scene", type: "scene" },
+      output: { id: `A-Rotate-O`, displayName: "Scene", type: "scene" },
       uis: [
         {id: "x-rotate", displayName: "X", component: "slider" },
         {id : "y-rotate",displayName : "Y", component : "slider"},
@@ -38,25 +53,35 @@
         from : [],
         to : []
       },
+      posistion : {
+        x : 375,
+        y : 0
+      },
     },
-    3 :{
-      type : "Add Cube",
+    "N-Cube" :{
+      id : `N-Cube`,
+      type : "add cube",
       displayName: "Add Cube",
       inputs: [],
-      output: { id: "cube", displayName: "Cube", type: "cube" },
+      output: { id: "A-Add-Cube-O", displayName: "Cube", type: "cube" },
       uis: [],
       connections : {
         from : [],
         to : []
       },
+      posistion : {
+        x : -200,
+        y : 200
+      }
     },
-    4 : { 
-      type : "Color",
+    "N-Color" : { 
+      id : `N-Color`,
+      type : "color",
       displayName: "Color",
       inputs: [
-        { id: "cubeIn", displayName: "Cube", type: "cube" }
+        { id: `A-Color-I`, displayName: "Cube", type: "cube" }
       ],
-      output: { id: "cubeOut", displayName: "Cube", type: "cube" },
+      output: { id: "A-Color-O", displayName: "Cube", type: "cube" },
       uis: [
         { id: "color", displayName: "Color", component: "colorPicker" }
       ],
@@ -64,14 +89,19 @@
         from : [],
         to : []
       },
+      posistion : {
+        x : 0,
+        y : 250
+      }
     },
-    5 : {
-      type : "Position",
+    "N-Position" : {
+      id : `N-Position`,
+      type : "position",
       displayName: "Position",
       inputs: [
-        { id: "cubeIn", displayName: "Cube", type: "cube" }
+        { id: "A-Position-I", displayName: "Cube", type: "cube" }
       ],
-      output: { id: "cubeOut", displayName: "Cube", type: "cube" },
+      output: { id: "A-Position-O", displayName: "Cube", type: "cube" },
       uis: [
         {id: "x-rotate", displayName: "X", component: "slider" },
         {id : "y-rotate",displayName : "Y", component : "slider"},
@@ -80,49 +110,46 @@
         from : [],
         to : []
       },
+      posistion : {
+        x : 0,
+        y : 0
+      }
     }
-
-
   };
 
-  const CUBE_INDEX = 3;
+  const CUBE_INDEX = "N-Cube";
 
 
   async function edgeConnected(e: CustomEvent<any>) {
     // console.log("CONNECTION EVENT");
-
-    let parts = e.detail.sourceNode.id.split("-");
-    const sourceId = parseInt(parts[1], 10);
-
-    parts = e.detail.targetNode.id.split("-");
-    const targetId = parseInt(parts[1], 10);
+    const sourceId = e.detail.sourceNode.id;
+    const targetId = e.detail.targetNode.id;
 
     nodes[sourceId].connections.to.push(targetId);
     nodes[targetId].connections.from.push(sourceId);
 
-    propagate(nodes[1]);
+    propagate(nodes["N-Output"]);
     cubeVisible();
+    console.log(nodes);
+
   }
 
   async function edgeDisconnected(e : CustomEvent<any>){
     // console.log("DISCONNECTION EVENT");
     
-    let parts = e.detail.sourceNode.id.split("-");
-    const sourceId = parseInt(parts[1], 10);
+    const sourceId = e.detail.sourceNode.id;
+    const targetId = e.detail.targetNode.id;
 
-    parts = e.detail.targetNode.id.split("-");
-    const targetId = parseInt(parts[1], 10);
 
-    for(let i = 2;i<Object.keys(nodes).length+1;i++){
-      nodes[i].connected = false;
+    for(const node of Object.values(nodes)){
+      node.connected = false;
     }
-
-
 
     nodes[sourceId].connections.to = nodes[sourceId].connections.to.filter(item => item !== targetId)
     nodes[targetId].connections.from = nodes[targetId].connections.from.filter(item => item !== sourceId)
-    propagate(nodes[1]);
+    propagate(nodes["N-Output"]);
     cubeVisible();
+    console.log(nodes);
   }
 
   function cubeVisible(){
@@ -134,6 +161,7 @@
 
 
   function propagate(node : BlixNodeData){
+
     if(node.connected){
       for(let i = 0; i < node.connections.from.length; i++){
         let sourceNode = nodes[node.connections.from[i]];
@@ -145,12 +173,28 @@
   nodes = {...nodes};
   }
 
-  
+
+
+  onMount(() => {
+
+    if(connectAnchorIds){
+      // console.log(nodes["N-Rotate"].id)
+      // console.log(nodes["N-Rotate"].output.id)
+      // console.log(nodes["N-Output"].id)
+      // console.log(nodes["N-Output"].inputs[0].id)
+     console.log(connectAnchorIds(nodes["N-Rotate"].id,nodes["N-Rotate"].output.id,nodes["N-Output"].id,nodes["N-Output"].inputs[0].id));
+      // connectAnchorIds(nodes["pos"].id,nodes["pos"].output.id,nodes["rot"].id,nodes["rot"].inputs[0].id);
+      // connectAnchorIds(nodes["col"].id,nodes["col"].output.id,nodes["pos"].id,nodes["pos"].inputs[0].id);
+      // connectAnchorIds(nodes["cub"].id,nodes["cub"].output.id,nodes["col"].id,nodes["col"].inputs[0].id);
+    }
+    else
+    console.log("AMOGUS")
+
+  }); 
+
 
 </script>
 <Svelvet
-
-
     id="mainGraph"
     zoom="{0.6}"
     minimap
@@ -163,6 +207,7 @@
 
     on:connection="{edgeConnected}"
     on:disconnection="{edgeDisconnected}"
+    bind:connectAnchorIds="{connectAnchorIds}"
 
 >
     <!-- on:rightClick="{handleRightClick}" -->
@@ -174,13 +219,18 @@
 
     {#each Object.values(nodes) as node,i (node.displayName)}
         <BlixNode 
+         id={node.id}
          parent={node.type}
          displayName={node.displayName}
          inputsData={node.inputs}
          outputData={node.output} 
          uisData={node.uis} 
          bind:box={box} 
-         bind:connected={node.connected} />
+         bind:connected={node.connected}
+         posistion={node.posistion}
+         connections={node.connections} 
+         
+         />
     {/each}
     <!-- <Node>
         <Slider

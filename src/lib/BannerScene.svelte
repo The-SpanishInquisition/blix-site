@@ -76,13 +76,13 @@
 
 
 {#if !hidden}
-
+<!-- 
 <SheetObject
   key="Box"
   let:Transform
-  >
+  > -->
 
- <Transform key={"HI"}>
+ <!-- <Transform key={"HI"}> -->
 
   <T.Mesh position={[UserBox.pos[0], 0.5*UserBox.dim-1, UserBox.pos[1]]} rotation={UserBox.rot} castShadow receiveShadow>
     {#if UserBox?.blixBox}
@@ -93,11 +93,11 @@
       <!-- <Sync  color roughness metalness /> -->
       <!-- <Text text="{i}" color="white" fontSize={0.5} anchorX="50%" anchorY="100%" position.y={4.5} /> -->
   </T.Mesh>
- </Transform> 
+ <!-- </Transform>  -->
 
 
 
-</SheetObject>
+<!-- </SheetObject> -->
 {/if}
 <!-- <TransformControls translationSnap={0} mode="translate" > -->
 <!-- </TransformControls> -->

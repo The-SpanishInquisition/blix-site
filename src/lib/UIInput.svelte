@@ -8,7 +8,7 @@
   export let value = writable<any>(0);
   export let Userbox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
-  export let parent : NodeType = "Position";
+  export let parent : NodeType = "position";
   const col = "#f43e5c";
   const rot : Triple = [0, 45, 0];
 
@@ -30,7 +30,7 @@ function handle()
     }
     else if(ui.component==="slider"){
         if(connected){
-        if(parent==="Rotate"){
+        if(parent==="rotate"){
             if(ui.id==="x-rotate") Userbox.rot[0] = $value;
             else
             if(ui.id==="y-rotate") Userbox.rot[1] = $value;
@@ -55,7 +55,7 @@ function handle()
 <!-- UI Input Component -->
 <div class="component">
     {#if ui.component === "slider"}
-        <Slider parameterStore={value} min={-3} max={3} step={0.1}/>
+        <Slider parameterStore={value} min={-3} max={3} step={0.1} bgColor={"#1F1F28"} barColor={"#f43e5c"}/>
     {:else if ui.component === "colorPicker"}
         <ColorPicker parameterStore={value} />
     {/if}

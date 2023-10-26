@@ -1,20 +1,28 @@
 <script lang="ts">
-  import { Anchor, DefaultAnchor, Node, type CSSColorString, ColorPicker, Slider } from "blix_svelvet";
+  import { Anchor, DefaultAnchor, Node, type CSSColorString, ColorPicker, Slider, type NodeKey } from "blix_svelvet";
   import { createEventDispatcher } from "svelte";
   import { generateInput, generateOutput } from 'blix_svelvet';
   import type { BlixAnchorData, BlixUIInputData, NodeType } from "./types";
   import UiInput from "./UIInput.svelte";
   import type { Pair, Triple } from "./types";
+  
 
   const dispatch = createEventDispatcher();
-
+  export let id: string;
   export let displayName = "Blix Node";
   export let inputsData: BlixAnchorData[] = [];
   export let outputData: BlixAnchorData = null;
   export let uisData: BlixUIInputData[] = [];
   export let box : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
-  export let parent : NodeType = "Position";
+  export let parent : NodeType = "position";
+  export let posistion : { x: number, y : number};
+  export let connections : {
+    from : NodeKey[],
+    to : NodeKey[]
+  };
+
+  
 
   // const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
 
@@ -76,6 +84,9 @@
   // Generate output store
   const output = generateOutput(inputs, processor);
 
+
+  const nodes = connections.to;
+
 </script>
 
 <!-- <Node width={400} height={200} useDefaults>
@@ -102,6 +113,7 @@
 
 
 <Node
+    {id}
     bgColor="#262630"
     textColor="#ffffff"
     borderColor="transparent"
@@ -109,6 +121,7 @@
     borderRadius="{10}"
     selectionColor="#f43e5c"
     on:selected="{() => console.log('selected')}"
+    position={posistion}
 >
 <div class="node">
     <div class="header">
