@@ -11,6 +11,7 @@
   export let parent : NodeType = "position";
   const col = "#f43e5c";
   const rot : Triple = [0, 45, 0];
+  const dim = 2.5;
 
 
 $: if ($value) {
@@ -23,14 +24,15 @@ $: if(connected===false){
     if(ui.component==="colorPicker") Userbox.col = col;
     else if(ui.component==="slider"){
         Userbox.rot = rot;
-        Userbox.col = col;
+        Userbox.dim = dim;
     } 
 }
 
 function handle()
 {
+
     if(ui.component==="colorPicker"){
-        if(connected) Userbox.col = $value;
+        if(connected && $value!=0) Userbox.col = $value;
         else Userbox.col = col;
     }
     else if(ui.component==="slider"){
