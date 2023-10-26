@@ -26,7 +26,7 @@
   <svelte:fragment slot="trail">
     <button class="btn btn-primary" on:click={openReleases}>
       <img src="releases.svg" alt="" />
-      Releases
+      <span>Releases</span>
       <!-- <img src="releases.svg" alt="" /> -->
     </button>
     <button class="btn btn-primary" on:click={openGithub}>
@@ -36,6 +36,9 @@
 </AppBar>
 
 <style>
+  .releases {
+    margin-left: 2rem;
+  }
   .logo {
     width: 3em;
   }
