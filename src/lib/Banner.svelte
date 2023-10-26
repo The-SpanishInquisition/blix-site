@@ -60,5 +60,7 @@
 
   .graph {
     margin-left: 1em;
+    /* width: 800px; */
+    /* height: 600px; */
   }
 </style>

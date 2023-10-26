@@ -11,7 +11,11 @@ const config = {
 	],
 
   theme: {
-    extend: {},
+    extend: {
+		colors: {
+			highlight: "#f43e5c"
+		  }
+	},
   },
 
 	plugins: [
