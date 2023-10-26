@@ -16,14 +16,14 @@
 </div>
 
 <div class="logo-cloud grid-cols-1 lg:!grid-cols-2 gap-1 w-3/6 mt-12 mx-auto">
-  <a class="logo-item" href="/">
-    <span on:click={openGithub}>
+  <a class="logo-item" href="/" on:click={openGithub}>
+    <span>
       <img src="github.svg" alt="Github" />
     </span>
     <span>Github</span>
   </a>
-  <a class="logo-item" href="/">
-    <span on:click={openYoutube}>
+  <a class="logo-item" href="/" on:click={openYoutube}>
+    <span>
       <img src="youtube.svg" alt="Youtube" />
     </span>
     <span>Youtube</span>
