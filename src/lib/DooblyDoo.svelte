@@ -2,6 +2,10 @@
   const openGithub = () => {
     window.open("https://github.com/COS301-SE-2023/AI-Photo-Editor", "_blank");
   };
+
+  const openYoutube = () => {
+    window.open("https://www.youtube.com/watch?v=7y2TohRtZDU", "_blank");
+  };
 </script>
 
 <div class="card card-hover p-4 w-5/6 mx-auto">
@@ -19,7 +23,9 @@
     <span>Github</span>
   </a>
   <a class="logo-item" href="/">
-    <span>(icon)</span>
+    <span on:click={openYoutube}>
+      <img src="youtube.svg" alt="Youtube" />
+    </span>
     <span>Youtube</span>
   </a>
 </div>
