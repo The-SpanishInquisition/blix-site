@@ -1,11 +1,23 @@
 <script lang="ts">
-  import { Anchor, DefaultAnchor, Node, type CSSColorString, ColorPicker, Slider, type NodeKey } from "blix_svelvet";
+  import {
+    Anchor,
+    DefaultAnchor,
+    Node,
+    generateInput,
+    generateOutput,
+    type CSSColorString,
+    type NodeKey,
+  } from "blix_svelvet";
   import { createEventDispatcher } from "svelte";
-  import { generateInput, generateOutput } from 'blix_svelvet';
-  import type { BlixAnchorData, BlixUIInputData, NodeType } from "./types";
   import UiInput from "./UIInput.svelte";
-  import type { Pair, Triple,Position } from "./types";
-  
+  import type {
+    BlixAnchorData,
+    BlixUIInputData,
+    NodeType,
+    Pair,
+    Translation,
+    Triple,
+  } from "./types";
 
   const dispatch = createEventDispatcher();
   export let id: string;
@@ -13,25 +25,29 @@
   export let inputsData: BlixAnchorData[] = [];
   export let outputData: BlixAnchorData = null;
   export let uisData: BlixUIInputData[] = [];
-  export let box : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
+  export let box: {
+    pos: Pair;
+    rot: Triple;
+    dim: number;
+    col: string;
+    blixBox?: boolean;
+  };
   export let connected = false;
-  export let parent : NodeType = "position";
-  export let position : Position;
-  export let connections : {
-    from : NodeKey[],
-    to : NodeKey[]
+  export let parent: NodeType = "translation";
+  export let position: Translation;
+  export let connections: {
+    inputs: NodeKey[];
+    outputs: NodeKey[];
   };
 
   const pos = position;
 
-  
-
   // const nodeId = `Node${Math.floor(Math.random() * 10000)}`;
 
-//   function checkShowTextOutline(color: string) {
-//     const readable = colord(color).isReadable();
-//     return readable;
-//   }
+  //   function checkShowTextOutline(color: string) {
+  //     const readable = colord(color).isReadable();
+  //     return readable;
+  //   }
 
   function stringToColor(str: string): CSSColorString {
     let hash = 0;
@@ -49,7 +65,6 @@
     return colour as CSSColorString;
   }
 
-
   // Type your input structure
   type InputStructure = {
     value1: number;
@@ -61,7 +76,7 @@
   const initialData = {
     value1: 10,
     value2: 20,
-    option: "red"
+    option: "red",
   };
 
   // inputsData.forEach((inp) => {
@@ -77,7 +92,7 @@
 
   // Specify processor function
   const processor = (inps: InputStructure) => {
-    if (inps.option === 'red') {
+    if (inps.option === "red") {
       return inps.value1 + inps.value2;
     }
     return 100;
@@ -86,9 +101,7 @@
   // Generate output store
   const output = generateOutput(inputs, processor);
 
-
-  const nodes = connections.to;
-
+  // const nodes = connections.to;
 </script>
 
 <!-- <Node width={400} height={200} useDefaults>
@@ -113,103 +126,104 @@
     </div>
 </Node> -->
 
-
 <Node
-    {id}
-    bgColor="#262630"
-    textColor="#ffffff"
-    borderColor="transparent"
-    borderWidth="1px"
-    borderRadius="{10}"
-    selectionColor="#f43e5c"
-    on:selected="{() => console.log('selected')}"
-    position={pos}
+  {id}
+  bgColor="#262630"
+  textColor="#ffffff"
+  borderColor="transparent"
+  borderWidth="1px"
+  borderRadius={10}
+  selectionColor="#f43e5c"
+  on:selected={() => console.log("selected")}
+  position={pos}
 >
-<div class="node">
+  <div class="node">
     <div class="header">
-    <h1>{displayName}</h1>
+      <h1>{displayName}</h1>
     </div>
     <div class="node-body" style="max-width: 400px">
       {#each uisData as ui}
-        <UiInput {ui} parent={parent} bind:value={inputs[ui.id]} bind:Userbox={box} bind:connected={connected}/>
+        <UiInput
+          {ui}
+          {parent}
+          bind:value={inputs[ui.id]}
+          bind:Userbox={box}
+          bind:connected
+        />
       {/each}
     </div>
 
     <div class="anchors inputs">
-        {#each inputsData as input}
+      {#each inputsData as input}
         {@const color = stringToColor(input.type)}
         <Anchor
-            input
-            dataType="{input.type || ''}"
-            bgColor="{color}"
-            id="{input.id}"
-            direction="west"
-            on:connection="{() => dispatch('connection', { input })}"
-            on:disconnection="{() => dispatch('disconnection', { input })}"
-            let:connecting
-            let:hovering
+          input
+          dataType={input.type || ""}
+          bgColor={color}
+          id={input.id}
+          direction="west"
+          on:connection={() => dispatch("connection", { input })}
+          on:disconnection={() => dispatch("disconnection", { input })}
+          let:connecting
+          let:hovering
         >
-            {#if hovering}
+          {#if hovering}
             {@const typeCol = "pink"}
             <div class="anchorTooltip">
-                {#if input.displayName}
+              {#if input.displayName}
                 {input.displayName}<br />
-                {/if}
-                &lt;<span
-                style:color="{typeCol}"
-                >{input.type || "any"}</span
-                >&gt;
+              {/if}
+              &lt;<span style:color={typeCol}>{input.type || "any"}</span>&gt;
             </div>
-            {/if}
-            <DefaultAnchor
-            input="{true}"
-            output="{false}"
-            connecting="{connecting}"
-            hovering="{false}"
-            bgColor="{color}"
-            connected="{false}"
-            />
+          {/if}
+          <DefaultAnchor
+            input={true}
+            output={false}
+            {connecting}
+            hovering={false}
+            bgColor={color}
+            connected={false}
+          />
         </Anchor>
-        {/each}
+      {/each}
     </div>
     <div class="anchors outputs">
-        {#if outputData}
+      {#if outputData}
         {@const color = stringToColor(outputData.type)}
         <Anchor
-            output
-            dataType="{outputData.type || ''}"
-            bgColor="{color}"
-            id="{outputData.id}"
-            direction="east"
-            on:connection="{() => dispatch('connection', { outputData })}"
-            on:disconnection="{() => dispatch('disconnection', { outputData })}"
-            let:connecting
-            let:hovering
+          output
+          dataType={outputData.type || ""}
+          bgColor={color}
+          id={outputData.id}
+          direction="east"
+          on:connection={() => dispatch("connection", { outputData })}
+          on:disconnection={() => dispatch("disconnection", { outputData })}
+          let:connecting
+          let:hovering
         >
-            {#if hovering}
+          {#if hovering}
             {@const typeCol = "lightblue"}
             <div class="anchorTooltip">
-                {#if outputData.displayName}
+              {#if outputData.displayName}
                 {outputData.displayName}<br />
-                {/if}
-                &lt;<span
-                style:color="{typeCol}"
-                >{outputData.type || "any"}</span
-                >&gt;
+              {/if}
+              &lt;<span style:color={typeCol}>{outputData.type || "any"}</span
+              >&gt;
             </div>
-            {/if}
-            <DefaultAnchor
-            input="{true}"
-            output="{false}"
-            connecting="{connecting}"
-            hovering="{false}"
-            bgColor="{color}"
-            connected="{false}"
-            />
+          {/if}
+          <DefaultAnchor
+            input={true}
+            output={false}
+            {connecting}
+            hovering={false}
+            bgColor={color}
+            connected={false}
+          />
         </Anchor>
-        {/if}
+      {/if}
     </div>
-</div></Node>
+  </div></Node
+>
 
 <style>
   .node-body {

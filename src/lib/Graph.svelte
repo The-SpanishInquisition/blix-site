@@ -1,15 +1,18 @@
 <script lang="ts">
+  import { Svelvet, type AnchorKey, type NodeKey } from "blix_svelvet";
+  import { onMount, tick } from "svelte";
   import BlixNode from "./BlixNode.svelte";
-  import type { BlixNodeData } from "./types";
-  import type { Pair, Triple } from "./types";
-  import { Svelvet, type NodeKey, type AnchorKey } from "blix_svelvet";
-  import {onMount} from 'svelte';
-  import type { Position } from "./types";
+  import type { BlixNodeData, Pair, Triple } from "./types";
 
   let graphData: any;
-  export let box :  {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
+  export let box: {
+    pos: Pair;
+    rot: Triple;
+    dim: number;
+    col: string;
+    blixBox?: boolean;
+  };
   export let hidden = true;
-
 
   let connectAnchorIds: (
     sourceNode: NodeKey,
@@ -18,234 +21,226 @@
     targetAnchor: AnchorKey
   ) => any;
 
-  let nodes:{[id : string] :  BlixNodeData} = {
-    "N-Output" : {
-      id : `N-Output`,
-      type : "output",
+  let nodes: { [id: string]: BlixNodeData } = {
+    "N-Output": {
+      id: `N-Output`,
+      type: "output",
       displayName: "Output",
-      inputs: [
-        { id: `A-Output-I`, displayName: "Scene", type: "scene" }
-      ],
+      inputs: [{ id: `Output-I`, displayName: "Scene", type: "scene" }],
       uis: [],
-      connections : {
-        from : [],
-        to : []
+      connections: {
+        inputs: [],
+        outputs: [],
       },
-      connected : true,
-      position : {
-        x : 800,
-        y : 0
-      }
+      connected: true,
+      position: {
+        x: 800,
+        y: 0,
+      },
     },
-    "N-Rotate" : {
-      id : `N-Rotate`,
-      type : "rotate",
-      displayName: "Rotate",
-      inputs: [
-        { id: `A-Rotate-I`, displayName: "Cube", type: "cube" }
-      ],
-      output: { id: `A-Rotate-O`, displayName: "Scene", type: "scene" },
+    "N-Rotation": {
+      id: `N-Rotation`,
+      type: "rotation",
+      displayName: "Rotation",
+      inputs: [{ id: `Rotation-I`, displayName: "Cube", type: "cube" }],
+      output: { id: `Rotation-O`, displayName: "Scene", type: "scene" },
       uis: [
-        {id: "x-rotate", displayName: "X", component: "slider" },
-        {id : "y-rotate",displayName : "Y", component : "slider"},
-        {id : "z-rotate",displayName : "Z", component : "slider"},
+        { id: "x-rotation", displayName: "X", component: "slider" },
+        { id: "y-rotation", displayName: "Y", component: "slider" },
+        { id: "z-rotation", displayName: "Z", component: "slider" },
       ],
-      connections : {
-        from : [],
-        to : []
+      connections: {
+        inputs: [],
+        outputs: [],
       },
-      position : {
-        x : 375,
-        y : 0
+      position: {
+        x: 375,
+        y: 0,
       },
     },
-    "N-Cube" :{
-      id : `N-Cube`,
-      type : "add cube",
-      displayName: "Add Cube",
+    "N-Cube": {
+      id: `N-Cube`,
+      type: "cube",
+      displayName: "Cube",
       inputs: [],
-      output: { id: "A-Add-Cube-O", displayName: "Cube", type: "cube" },
+      output: { id: "Add-Cube-O", displayName: "Cube", type: "cube" },
       uis: [],
-      connections : {
-        from : [],
-        to : []
+      connections: {
+        inputs: [],
+        outputs: [],
       },
-      position : {
-        x : -200,
-        y : 200
-      }
+      position: {
+        x: -200,
+        y: 200,
+      },
     },
-    "N-Color" : { 
-      id : `N-Color`,
-      type : "color",
+    "N-Color": {
+      id: `N-Color`,
+      type: "color",
       displayName: "Color",
-      inputs: [
-        { id: `A-Color-I`, displayName: "Cube", type: "cube" }
-      ],
-      output: { id: "A-Color-O", displayName: "Cube", type: "cube" },
-      uis: [
-        { id: "color", displayName: "Color", component: "colorPicker" }
-      ],
-      connections : {
-        from : [],
-        to : []
+      inputs: [{ id: `Color-I`, displayName: "Cube", type: "cube" }],
+      output: { id: "Color-O", displayName: "Cube", type: "cube" },
+      uis: [{ id: "color", displayName: "Color", component: "colorPicker" }],
+      connections: {
+        inputs: [],
+        outputs: [],
       },
-      position : {
-        x : 0,
-        y : 250
-      }
+      position: {
+        x: 0,
+        y: 250,
+      },
     },
-    "N-Position" : {
-      id : `N-Position`,
-      type : "position",
-      displayName: "Position",
-      inputs: [
-        { id: "A-Position-I", displayName: "Cube", type: "cube" }
-      ],
-      output: { id: "A-Position-O", displayName: "Cube", type: "cube" },
+    "N-Translation": {
+      id: `N-Translation`,
+      type: "translation",
+      displayName: "Translation",
+      inputs: [{ id: "Translation-I", displayName: "Cube", type: "cube" }],
+      output: { id: "Translation-O", displayName: "Cube", type: "cube" },
       uis: [
-        {id: "x-rotate", displayName: "X", component: "slider" },
-        {id : "y-rotate",displayName : "Y", component : "slider"},
+        { id: "x-translation", displayName: "X", component: "slider" },
+        { id: "y-translation", displayName: "Y", component: "slider" },
       ],
-      connections : {
-        from : [],
-        to : []
+      connections: {
+        inputs: [],
+        outputs: [],
       },
-      position : {
-        x : 0,
-        y : 0
-      }
-    }
+      position: {
+        x: 0,
+        y: 0,
+      },
+    },
   };
 
   const CUBE_INDEX = "N-Cube";
-
 
   async function edgeConnected(e: CustomEvent<any>) {
     const sourceId = e.detail.sourceNode.id;
     const targetId = e.detail.targetNode.id;
 
-
-    nodes[sourceId].connections.to.push(targetId);
-    nodes[targetId].connections.from.push(sourceId);
+    nodes[sourceId].connections.outputs.push(targetId);
+    nodes[targetId].connections.inputs.push(sourceId);
 
     propagate(nodes["N-Output"]);
     cubeVisible();
   }
 
-  async function edgeDisconnected(e : CustomEvent<any>){
+  async function edgeDisconnected(e: CustomEvent<any>) {
     // console.log("DISCONNECTION EVENT");
-    
+
     const sourceId = e.detail.sourceNode.id;
     const targetId = e.detail.targetNode.id;
 
-
-
-    for(const node of Object.values(nodes)){
+    for (const node of Object.values(nodes)) {
       node.connected = false;
     }
 
-    nodes[sourceId].connections.to = nodes[sourceId].connections.to.filter(item => item !== targetId)
-    nodes[targetId].connections.from = nodes[targetId].connections.from.filter(item => item !== sourceId)
-
+    nodes[sourceId].connections.outputs = nodes[
+      sourceId
+    ].connections.outputs.filter((item) => item !== targetId);
+    nodes[targetId].connections.inputs = nodes[
+      targetId
+    ].connections.inputs.filter((item) => item !== sourceId);
     propagate(nodes["N-Output"]);
     cubeVisible();
-
   }
 
-  function cubeVisible(){
-    if(nodes[CUBE_INDEX].connected) hidden = false
-     else hidden = true;
+  function cubeVisible() {
+    hidden = !nodes[CUBE_INDEX].connected;
   }
 
-
-
-
-  function propagate(node : BlixNodeData){
-    if(node.id=="N-Output") node.connected=true;
-    if(node.connected){
-      for(let i = 0; i < node.connections.from.length; i++){
-        let sourceNode = nodes[node.connections.from[i]];
+  function propagate(node: BlixNodeData) {
+    if (node.id === "N-Output") node.connected = true;
+    if (node.connected) {
+      console.log(node.displayName);
+      for (let i = 0; i < node.connections.inputs.length; i++) {
+        const sourceNode = nodes[node.connections.inputs[i]];
         sourceNode.connected = true;
         propagate(sourceNode);
       }
     }
-  nodes = {...nodes};
+    nodes = { ...nodes };
   }
 
+  onMount(async () => {
+    await tick();
+    ConnectEdges();
+  });
 
-
-  onMount(() => {
-
-    if(connectAnchorIds){
-      // console.log(nodes["N-Rotate"].id)
-      // console.log(nodes["N-Rotate"].output.id)
-      // console.log(nodes["N-Output"].id)
-      // console.log(nodes["N-Output"].inputs[0].id)
-     console.log(connectAnchorIds(nodes["N-Rotate"].id,nodes["N-Rotate"].output.id,nodes["N-Output"].id,nodes["N-Output"].inputs[0].id));
-      // connectAnchorIds(nodes["pos"].id,nodes["pos"].output.id,nodes["rot"].id,nodes["rot"].inputs[0].id);
-      // connectAnchorIds(nodes["col"].id,nodes["col"].output.id,nodes["pos"].id,nodes["pos"].inputs[0].id);
-      // connectAnchorIds(nodes["cub"].id,nodes["cub"].output.id,nodes["col"].id,nodes["col"].inputs[0].id);
+  function ConnectEdges() {
+    if (connectAnchorIds) {
+      connectAnchorIds(
+        nodes["N-Rotation"].id,
+        `A-${nodes["N-Rotation"].output.id}`,
+        nodes["N-Output"].id,
+        `A-${nodes["N-Output"].inputs[0].id}`
+      );
+      nodes["N-Rotation"].connections.outputs.push("N-Output");
+      nodes["N-Output"].connections.inputs.push("N-Rotation");
+      connectAnchorIds(
+        nodes["N-Translation"].id,
+        `A-${nodes["N-Translation"].output.id}`,
+        nodes["N-Rotation"].id,
+        `A-${nodes["N-Rotation"].inputs[0].id}`
+      );
+      nodes["N-Translation"].connections.outputs.push("N-Rotation");
+      nodes["N-Rotation"].connections.inputs.push("N-Translation");
+      connectAnchorIds(
+        nodes["N-Color"].id,
+        `A-${nodes["N-Color"].output.id}`,
+        nodes["N-Translation"].id,
+        `A-${nodes["N-Translation"].inputs[0].id}`
+      );
+      nodes["N-Color"].connections.outputs.push("N-Translation");
+      nodes["N-Translation"].connections.inputs.push("N-Color");
+      connectAnchorIds(
+        nodes["N-Cube"].id,
+        `A-${nodes["N-Cube"].output.id}`,
+        nodes["N-Color"].id,
+        `A-${nodes["N-Color"].inputs[0].id}`
+      );
+      nodes["N-Cube"].connections.outputs.push("N-Color");
+      nodes["N-Color"].connections.inputs.push("N-Cube");
     }
-    else
-    console.log("AMOGUS")
-
-  }); 
-
-
-
-// const positions : Position[] = [];
-
-// for(const node of Object.values(nodes)){
-//   let num = 0;
-//   positions.push({
-//     x : node.position.x,
-//     y : node.position.y
-//   });
-//   console.log(positions);
-// }
-// const val = positions;
-
+    propagate(nodes["N-Output"]);
+    cubeVisible();
+  }
 </script>
+
 <Svelvet
-    id="mainGraph"
-    zoom="{0.6}"
-    minimap
-    theme="custom-dark"
-
-    bind:graph="{graphData}"
-
-    width={800}
-    height={600}
-
-    on:connection="{edgeConnected}"
-    on:disconnection="{edgeDisconnected}"
-    bind:connectAnchorIds="{connectAnchorIds}"
-
+  id="mainGraph"
+  zoom={0.6}
+  minimap
+  theme="custom-dark"
+  bind:graph={graphData}
+  width={800}
+  height={600}
+  on:connection={edgeConnected}
+  on:disconnection={edgeDisconnected}
+  bind:connectAnchorIds
+  on:leftClick={ConnectEdges}
 >
-    <!-- on:rightClick="{handleRightClick}" -->
-    <!-- on:connection="{edgeConnected}" -->
-    <!-- on:disconnection="{edgeDisconnected}" -->
-    <!-- bind:connectAnchorIds="{connectAnchorIds}" -->
-    <!-- bind:clearAllGraphEdges="{clearAllGraphEdges}" -->
-    <!-- dataTypeChecker="{dataTypeChecker}" -->
+  <!-- on:rightClick="{handleRightClick}" -->
+  <!-- on:connection="{edgeConnected}" -->
+  <!-- on:disconnection="{edgeDisconnected}" -->
+  <!-- bind:connectAnchorIds="{connectAnchorIds}" -->
+  <!-- bind:clearAllGraphEdges="{clearAllGraphEdges}" -->
+  <!-- dataTypeChecker="{dataTypeChecker}" -->
 
-    {#each Object.values(nodes) as node,i (node.displayName)}
-        <BlixNode 
-         id={node.id}
-         parent={node.type}
-         displayName={node.displayName}
-         inputsData={node.inputs}
-         outputData={node.output} 
-         uisData={node.uis} 
-         bind:box={box} 
-         bind:connected={node.connected}
-         position={node.position}
-         connections={node.connections} 
-         
-         />
-    {/each}
-    <!-- <Node>
+  {#each Object.values(nodes) as node, i (node.displayName)}
+    <BlixNode
+      id={node.id}
+      parent={node.type}
+      displayName={node.displayName}
+      inputsData={node.inputs}
+      outputData={node.output}
+      uisData={node.uis}
+      bind:box
+      bind:connected={node.connected}
+      position={node.position}
+      connections={node.connections}
+    />
+  {/each}
+  <!-- <Node>
         <Slider
             label="Size"
             min={10}
@@ -257,7 +252,7 @@
         />
     </Node>
      -->
-    <!-- <Background bgColor="#11111b" /> -->
+  <!-- <Background bgColor="#11111b" /> -->
 </Svelvet>
 
 <style lang="scss">
