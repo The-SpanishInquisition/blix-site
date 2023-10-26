@@ -3,7 +3,7 @@
   import BannerScene from "./BannerScene.svelte";
   import Graph from "./Graph.svelte";
   import type { Pair, Triple } from "./types";
-
+  import {Theatre} from '@threlte/theatre'
   const canvasSize: Size = {
     width: 800,
     height: 600,
@@ -11,19 +11,25 @@
 
   let UserBox : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean} = {
   pos : [-1,1],
-  rot : [0, 32, 0],
+  rot : [0, 0, 0],
   dim : 2.5,
   col : "#f43e5c",
   blixBox : true
 };
 
 let hidden = true;
+
+import { getProject } from '@theatre/core'
+const config = {} // the config can be empty when starting a new project
+const project = getProject('My Project', config)
 </script>
 
 <div class="banner">
   <div class="tile scene">
     <Canvas size={canvasSize} >
+      <Theatre studio={{ enabled: true, hide: true }}>
       <BannerScene bind:UserBox={UserBox} bind:hidden={hidden}/>
+      </Theatre>
     </Canvas>
   </div>
   <div class="tile graph">

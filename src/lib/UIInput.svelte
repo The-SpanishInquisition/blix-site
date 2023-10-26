@@ -17,30 +17,30 @@ $: if ($value) {
       handle();
   }
 
-$: if(connected==false){
-    if(ui.component=="colorPicker") Userbox.col = col;
-    else if(ui.component=="slider") Userbox.rot = rot;
+$: if(connected===false){
+    if(ui.component==="colorPicker") Userbox.col = col;
+    else if(ui.component==="slider") Userbox.rot = rot;
 }
 
 function handle()
 {
-    if(ui.component=="colorPicker"){
+    if(ui.component==="colorPicker"){
         if(connected) Userbox.col = $value;
         else Userbox.col = col;
     }
-    else if(ui.component=="slider"){
+    else if(ui.component==="slider"){
         if(connected){
-        if(parent=="Rotate"){
-            if(ui.id=="x-rotate") Userbox.rot[0] = $value;
+        if(parent==="Rotate"){
+            if(ui.id==="x-rotate") Userbox.rot[0] = $value;
             else
-            if(ui.id=="y-rotate") Userbox.rot[1] = $value;
+            if(ui.id==="y-rotate") Userbox.rot[1] = $value;
             else
             Userbox.rot[2] = $value;  
         } 
         else{
-            if(ui.id=="x-rotate") Userbox.pos[0] = $value;
+            if(ui.id==="x-rotate") Userbox.pos[0] = $value;
             else
-            if(ui.id=="y-rotate") Userbox.pos[1] = $value;
+            if(ui.id==="y-rotate") Userbox.pos[1] = $value;
         }
       }
         else Userbox.rot = rot; 

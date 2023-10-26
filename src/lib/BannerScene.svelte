@@ -5,6 +5,7 @@
   import { AmbientLight, MeshPhongMaterial, MeshToonMaterial } from 'three';
   import BlixBox from './BlixBox.svelte';
   import type { Pair, Triple } from './types';
+  import {SheetObject} from '@threlte/theatre'
 
   interactivity();
 
@@ -73,15 +74,30 @@
 {/each}
 
 
+
 {#if !hidden}
-<T.Mesh position={[UserBox.pos[0], 0.5*UserBox.dim-1, UserBox.pos[1]]} rotation={UserBox.rot} castShadow receiveShadow>
-  {#if UserBox?.blixBox}
-    <BlixBox dim={UserBox.dim} position={UserBox.pos} rotation={UserBox.rot} />
-  {/if}
-    <RoundedBoxGeometry args={[UserBox.dim, UserBox.dim, UserBox.dim]} radius={UserBox.dim * 0.1} />
-    <T.MeshStandardMaterial bind:color={UserBox.col} />
-    <!-- <Text text="{i}" color="white" fontSize={0.5} anchorX="50%" anchorY="100%" position.y={4.5} /> -->
-</T.Mesh>
+
+<SheetObject
+  key="Box"
+  let:Transform
+  >
+
+ <Transform key={"HI"}>
+
+  <T.Mesh position={[UserBox.pos[0], 0.5*UserBox.dim-1, UserBox.pos[1]]} rotation={UserBox.rot} castShadow receiveShadow>
+    {#if UserBox?.blixBox}
+      <BlixBox dim={UserBox.dim} position={UserBox.pos} rotation={UserBox.rot} />
+    {/if}
+      <RoundedBoxGeometry args={[UserBox.dim, UserBox.dim, UserBox.dim]} radius={UserBox.dim * 0.1} />
+      <T.MeshStandardMaterial bind:color={UserBox.col} />
+      <!-- <Sync  color roughness metalness /> -->
+      <!-- <Text text="{i}" color="white" fontSize={0.5} anchorX="50%" anchorY="100%" position.y={4.5} /> -->
+  </T.Mesh>
+ </Transform> 
+
+
+
+</SheetObject>
 {/if}
 <!-- <TransformControls translationSnap={0} mode="translate" > -->
 <!-- </TransformControls> -->
