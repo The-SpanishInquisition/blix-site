@@ -4,7 +4,7 @@
   import { generateInput, generateOutput } from 'blix_svelvet';
   import type { BlixAnchorData, BlixUIInputData, NodeType } from "./types";
   import UiInput from "./UIInput.svelte";
-  import type { Pair, Triple } from "./types";
+  import type { Pair, Triple,Position } from "./types";
   
 
   const dispatch = createEventDispatcher();
@@ -16,11 +16,13 @@
   export let box : {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
   export let connected = false;
   export let parent : NodeType = "position";
-  export let posistion : { x: number, y : number};
+  export let position : Position;
   export let connections : {
     from : NodeKey[],
     to : NodeKey[]
   };
+
+  const pos = position;
 
   
 
@@ -121,7 +123,7 @@
     borderRadius="{10}"
     selectionColor="#f43e5c"
     on:selected="{() => console.log('selected')}"
-    position={posistion}
+    position={pos}
 >
 <div class="node">
     <div class="header">

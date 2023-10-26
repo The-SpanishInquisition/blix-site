@@ -15,11 +15,9 @@ export type BlixNodeData = {
     to : NodeKey[];
   }
   connected? : boolean,
-  posistion : {
-    x: number;
-    y: number;
-  }
+  position : Position
 };
 export type Pair = [number, number];
 export type Triple = [number, number, number];
 export type NodeType = "position" | "rotate" | "output" | "add cube" | "color";
+export type Position = { x : number, y : number}

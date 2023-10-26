@@ -4,6 +4,7 @@
   import type { Pair, Triple } from "./types";
   import { Svelvet, type NodeKey, type AnchorKey } from "blix_svelvet";
   import {onMount} from 'svelte';
+  import type { Position } from "./types";
 
   let graphData: any;
   export let box :  {pos: Pair, rot: Triple, dim: number, col: string, blixBox?: boolean};
@@ -31,7 +32,7 @@
         to : []
       },
       connected : true,
-      posistion : {
+      position : {
         x : 800,
         y : 0
       }
@@ -53,7 +54,7 @@
         from : [],
         to : []
       },
-      posistion : {
+      position : {
         x : 375,
         y : 0
       },
@@ -69,7 +70,7 @@
         from : [],
         to : []
       },
-      posistion : {
+      position : {
         x : -200,
         y : 200
       }
@@ -89,7 +90,7 @@
         from : [],
         to : []
       },
-      posistion : {
+      position : {
         x : 0,
         y : 250
       }
@@ -110,7 +111,7 @@
         from : [],
         to : []
       },
-      posistion : {
+      position : {
         x : 0,
         y : 0
       }
@@ -121,9 +122,9 @@
 
 
   async function edgeConnected(e: CustomEvent<any>) {
-    console.log("CONNECTION EVENT");
     const sourceId = e.detail.sourceNode.id;
     const targetId = e.detail.targetNode.id;
+
 
     nodes[sourceId].connections.to.push(targetId);
     nodes[targetId].connections.from.push(sourceId);
@@ -192,6 +193,19 @@
   }); 
 
 
+
+// const positions : Position[] = [];
+
+// for(const node of Object.values(nodes)){
+//   let num = 0;
+//   positions.push({
+//     x : node.position.x,
+//     y : node.position.y
+//   });
+//   console.log(positions);
+// }
+// const val = positions;
+
 </script>
 <Svelvet
     id="mainGraph"
@@ -226,7 +240,7 @@
          uisData={node.uis} 
          bind:box={box} 
          bind:connected={node.connected}
-         posistion={node.posistion}
+         position={node.position}
          connections={node.connections} 
          
          />
